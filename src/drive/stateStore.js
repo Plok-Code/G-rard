@@ -16,9 +16,10 @@ function loadState() {
     return {
       pageToken: parsed.pageToken || null,
       initialSyncCompleted: Boolean(parsed.initialSyncCompleted),
+      recentChangeIds: Array.isArray(parsed.recentChangeIds) ? parsed.recentChangeIds : [],
     };
   } catch (error) {
-    return { pageToken: null, initialSyncCompleted: false };
+    return { pageToken: null, initialSyncCompleted: false, recentChangeIds: [] };
   }
 }
 
@@ -30,6 +31,7 @@ function saveState(state) {
       {
         pageToken: state.pageToken || null,
         initialSyncCompleted: Boolean(state.initialSyncCompleted),
+        recentChangeIds: Array.isArray(state.recentChangeIds) ? state.recentChangeIds : [],
       },
       null,
       2,

@@ -16,16 +16,24 @@ function ensureState() {
   if (!state) {
     state = loadState();
   }
+  if (!Array.isArray(state.recentChangeIds)) {
+    state.recentChangeIds = [];
+  }
   if (!driveClient) {
     driveClient = createDriveClient();
   }
 }
 
 function resetState() {
-  state = { pageToken: null, initialSyncCompleted: false };
+  state = {
+    pageToken: null,
+    initialSyncCompleted: false,
+    recentChangeIds: [],
+  };
   saveState(state);
   scopeResolutionCache.clear();
   parentCache.clear();
+  lastNotificationByFile.clear();
 }
 
 function buildRequestBase() {
@@ -213,6 +221,8 @@ async function processChanges() {
 
   let keepFetching = true;
   let latestToken = pageToken;
+  const processedChangeIds = new Set(state.recentChangeIds || []);
+  const newlyProcessedIds = [];
 
   while (keepFetching) {
     const response = await driveClient.changes.list({
@@ -225,6 +235,13 @@ async function processChanges() {
 
     if (!isInitialSync && relevantChanges.length > 0) {
       for (const change of relevantChanges) {
+        if (processedChangeIds.has(change.id)) {
+          continue;
+        }
+
+        processedChangeIds.add(change.id);
+        newlyProcessedIds.push(change.id);
+
         const roleId = config.discord.drivePingRoleId || config.discord.pingRoleId;
         const roleMention = roleId ? `<@&${roleId}>` : '';
         try {
@@ -254,6 +271,10 @@ async function processChanges() {
 
   state.pageToken = latestToken;
   state.initialSyncCompleted = true;
+  if (newlyProcessedIds.length > 0) {
+    const existing = state.recentChangeIds || [];
+    state.recentChangeIds = [...existing, ...newlyProcessedIds].slice(-200);
+  }
   saveState(state);
 }
 
