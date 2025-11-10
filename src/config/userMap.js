@@ -2,8 +2,10 @@
 // Fill this array with the Trello member identifiers you want to match.
 const userMappings = [
   {
-    trelloFullName: 'Idris Naulleau',
-    trelloEmail: 'novarealmteam@gmail.com',
+    trelloMemberId: '671bcf458f2e724ae3ff9f27',
+    trelloFullName: 'Nova Realm',
+    trelloEmail: 'idris.naulleau.aurial@gmail.com',
+    preferredDisplayName: 'Idris Naulleau-Aurial',
     discordUserId: '929471016776904724',
   },
   {
@@ -27,7 +29,7 @@ function normalise(value) {
   return (value || '').trim().toLowerCase();
 }
 
-function resolveDiscordUser(member) {
+function findMapping(member) {
   if (!member) {
     return null;
   }
@@ -50,10 +52,35 @@ function resolveDiscordUser(member) {
     return false;
   });
 
-  return match ? match.discordUserId : null;
+  return match || null;
+}
+
+function resolveDiscordUser(member) {
+  const match = findMapping(member);
+  return match ? match.discordUserId || null : null;
+}
+
+function resolveDiscordProfile(member) {
+  const match = findMapping(member);
+  if (!match) {
+    return { discordUserId: null, displayName: null };
+  }
+
+  const displayName =
+    match.preferredDisplayName ||
+    match.discordDisplayName ||
+    match.trelloFullName ||
+    match.trelloUsername ||
+    null;
+
+  return {
+    discordUserId: match.discordUserId || null,
+    displayName,
+  };
 }
 
 module.exports = {
   resolveDiscordUser,
+  resolveDiscordProfile,
   userMappings,
 };

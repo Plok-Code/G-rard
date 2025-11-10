@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('./config');
 const trelloRouter = require('./trello/router');
+const githubRouter = require('./github/router');
 
 function rawBodySaver(req, _res, buf) {
   if (buf && buf.length) {
@@ -20,6 +21,7 @@ function createServer() {
   });
 
   app.use('/webhooks/trello', trelloRouter);
+  app.use('/webhooks/github', githubRouter);
 
   app.use((req, res) => {
     res.status(404).send('Not found');

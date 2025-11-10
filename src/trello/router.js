@@ -1,7 +1,7 @@
 const express = require('express');
 const util = require('util');
 const config = require('../config');
-const { resolveDiscordUser } = require('../config/userMap');
+const { resolveDiscordProfile } = require('../config/userMap');
 const { sendActionMessage } = require('../discord/notifier');
 const { formatAction, shouldNotifyAction } = require('./formatter');
 const { isValidSignature } = require('./signature');
@@ -39,10 +39,10 @@ router.post('/', async (req, res) => {
 
   try {
     const actor = action.memberCreator || {};
-    const discordUserId = resolveDiscordUser(actor);
+    const { discordUserId, displayName } = resolveDiscordProfile(actor);
     const actorDisplay = discordUserId
       ? `<@${discordUserId}>`
-      : `**${actor.fullName || actor.username || 'Quelqu\'un'}**`;
+      : `**${displayName || actor.fullName || actor.username || 'Quelqu\'un'}**`;
     const roleMention = `<@&${config.discord.pingRoleId}>`;
 
     console.log('[Trello] Action recu', action.type, 'par', actor.fullName || actor.username || actor.id);

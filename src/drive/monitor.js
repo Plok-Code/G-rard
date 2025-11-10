@@ -11,7 +11,6 @@ let pollTimer = null;
 
 const scopeResolutionCache = new Map();
 const parentCache = new Map();
-const lastNotificationByFile = new Map();
 
 function ensureState() {
   if (!state) {
@@ -34,7 +33,6 @@ function resetState() {
   saveState(state);
   scopeResolutionCache.clear();
   parentCache.clear();
-  lastNotificationByFile.clear();
 }
 
 function buildRequestBase() {
@@ -178,20 +176,6 @@ async function filterRelevantChanges(changes) {
   return Array.from(latestPerFile.values());
 }
 
-function shouldThrottle(change, summaryDetails) {
-  if (!config.drive.updateCooldownMs || summaryDetails !== 'Mise a jour') {
-    return false;
-  }
-
-  const last = lastNotificationByFile.get(change.fileId) || 0;
-  const now = Date.now();
-  if (now - last < config.drive.updateCooldownMs) {
-    return true;
-  }
-  lastNotificationByFile.set(change.fileId, now);
-  return false;
-}
-
 async function ensureStartPageToken() {
   if (!state.pageToken) {
     const options = {
@@ -251,13 +235,6 @@ async function processChanges() {
         const roleMention = roleId ? `<@&${roleId}>` : '';
         try {
           const message = formatChange(change, roleMention);
-
-          const detailsField = message.embeds?.[0]?.fields?.find((field) => field.name === 'Action');
-          const shouldSkip = detailsField && shouldThrottle(change, detailsField.value);
-          if (shouldSkip) {
-            continue;
-          }
-
           await sendActionMessage(message, { channelId: config.discord.driveChannelId });
         } catch (error) {
           console.error('[Drive] Erreur lors de lenvoi du message Discord', error);

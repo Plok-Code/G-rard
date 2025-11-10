@@ -24,6 +24,9 @@ const driveEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 const drivePrivateKey = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
 const driveChannelId = process.env.DISCORD_DRIVE_CHANNEL_ID;
 const driveEnabled = Boolean(driveEmail && drivePrivateKey && driveChannelId);
+const githubChannelId = optionalEnv('DISCORD_GITHUB_CHANNEL_ID', null);
+const githubWebhookSecret = optionalEnv('GITHUB_WEBHOOK_SECRET', null);
+const githubEnabled = Boolean(githubChannelId && githubWebhookSecret);
 
 const config = {
   discord: {
@@ -46,8 +49,13 @@ const config = {
     monitoredFolderId:
       optionalEnv('GOOGLE_DRIVE_FOLDER_ID', optionalEnv('GOOGLE_DRIVE_ID', null)),
     pollIntervalMs: parseInt(optionalEnv('GOOGLE_DRIVE_POLL_INTERVAL_MS', '15000'), 10),
-    updateCooldownMs: parseInt(optionalEnv('GOOGLE_DRIVE_UPDATE_COOLDOWN_MS', '300000'), 10),
     stateFile: optionalEnv('GOOGLE_DRIVE_STATE_FILE', path.join(process.cwd(), 'drive-state.json')),
+  },
+  github: {
+    enabled: githubEnabled,
+    channelId: githubChannelId,
+    pingRoleId: optionalEnv('DISCORD_GITHUB_PING_ROLE_ID', null),
+    webhookSecret: githubWebhookSecret,
   },
   server: {
     port: parseInt(process.env.PORT || '3000', 10),
