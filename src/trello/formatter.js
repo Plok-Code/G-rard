@@ -1,4 +1,6 @@
 const MAX_COMMENT_LENGTH = 180;
+const LIST_MOVE_KEY = 'idList';
+const CLOSED_FLAG_KEY = 'closed';
 
 function truncate(text, maxLength) {
   if (!text || text.length <= maxLength) {
@@ -20,6 +22,44 @@ function formatCardLink(card) {
     return `"${card.name}"`;
   }
   return `[${card.name}](${url})`;
+}
+
+function isListMove(data = {}) {
+  if (!Object.prototype.hasOwnProperty.call(data.old || {}, LIST_MOVE_KEY)) {
+    return false;
+  }
+  const previousListId = data.old?.idList;
+  const newListId = data.card?.idList || data.listAfter?.id || data.list?.id;
+  if (!previousListId || !newListId) {
+    return false;
+  }
+  return previousListId !== newListId;
+}
+
+function isArchiveAction(data = {}) {
+  if (!Object.prototype.hasOwnProperty.call(data.old || {}, CLOSED_FLAG_KEY)) {
+    return false;
+  }
+  return Boolean(data.card?.closed);
+}
+
+function shouldNotifyAction(action) {
+  if (!action) {
+    return false;
+  }
+
+  const { type, data = {} } = action;
+
+  switch (type) {
+    case 'commentCard':
+    case 'addAttachmentToCard':
+    case 'addMemberToCard':
+      return true;
+    case 'updateCard':
+      return isListMove(data) || isArchiveAction(data);
+    default:
+      return false;
+  }
 }
 
 function buildActionSummary(action) {
@@ -59,13 +99,13 @@ function buildActionSummary(action) {
     case 'addChecklistToCard':
       return `a ajoute la checklist **${data.checklist?.name}** a ${cardLink}.`;
     case 'updateCheckItemStateOnCard':
-      return `${data.checkItem?.state === 'complete' ? 'a coche' : 'a decoche'} l\'item "${data.checkItem?.name}" dans ${cardLink}.`;
+      return `${data.checkItem?.state === 'complete' ? 'a coche' : 'a decoche'} l'item "${data.checkItem?.name}" dans ${cardLink}.`;
     case 'createChecklist':
       return `a cree la checklist **${data.checklist?.name}** sur ${cardLink}.`;
     case 'deleteCard':
       return `a supprime la carte "${data.card?.name}" du tableau **${boardName}**.`;
     default:
-      return `a effectue l\'action ${type} sur ${cardLink || 'le tableau'}.`;
+      return `a effectue l'action ${type} sur ${cardLink || 'le tableau'}.`;
   }
 }
 
@@ -101,7 +141,7 @@ function formatAction(action, actorDisplay, roleMention) {
     color: 0x0055ff,
     description: summary,
     timestamp: action.date,
-    footer: { text: `Action Trello • ${action.id}` },
+    footer: { text: `Action Trello - ${action.id}` },
     fields: buildFields(action),
   };
 
@@ -110,4 +150,5 @@ function formatAction(action, actorDisplay, roleMention) {
 
 module.exports = {
   formatAction,
+  shouldNotifyAction,
 };

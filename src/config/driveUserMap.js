@@ -7,19 +7,19 @@ const driveUserMappings = [
     discordUserId: '929471016776904724',
   },
   {
-    email: 'vanessa.autale@gmail.com',
-    displayName: 'Vanessa Autale',
-    discordUserId: '1381308848962408479',
+    email: 'amelie.ny.tran@gmail.com',
+    displayName: 'Amelie Tran',
+    discordUserId: '405044561052696577',
   },
   {
-    email: 'audreyreboutier@gmail.com',
-    displayName: 'Audrey Reboutier',
-    discordUserId: '1419213516866457613',
+    email: 'ericmongreville1@gmail.com',
+    displayName: 'Eric Mongreville',
+    discordUserId: '1418256477147369595',
   },
   {
-    email: 'rayanouhaud@gmail.com',
-    displayName: 'Rayan Nouhaud',
-    discordUserId: '442583182735572992',
+    email: 'yannis.gris@gmail.com',
+    displayName: 'Yanis Gris',
+    discordUserId: '394803260764192770',
   },
 ];
 

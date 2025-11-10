@@ -2,28 +2,24 @@
 // Fill this array with the Trello member identifiers you want to match.
 const userMappings = [
   {
-    trelloMemberId: '671bcf458f2e724ae3ff9f27',
-    trelloUsername: 'novarealm',
-    trelloFullName: 'Nova Realm',
+    trelloFullName: 'Idris Naulleau',
+    trelloEmail: 'novarealmteam@gmail.com',
     discordUserId: '929471016776904724',
   },
   {
-    trelloMemberId: '68e52e31de094775a7aff96a',
-    trelloUsername: 'vanessaautale',
-    trelloFullName: 'Vanessa Autale',
-    discordUserId: '1381308848962408479',
+    trelloFullName: 'Amelie Tran',
+    trelloEmail: 'amelie.ny.tran@gmail.com',
+    discordUserId: '405044561052696577',
   },
   {
-    trelloMemberId: '68e52de7529079f5ea8b7500',
-    trelloUsername: 'audreyreboutier',
-    trelloFullName: 'Audrey Reboutier',
-    discordUserId: '1419213516866457613',
+    trelloFullName: 'Eric Mongreville',
+    trelloEmail: 'ericmongreville1@gmail.com',
+    discordUserId: '1418256477147369595',
   },
   {
-    trelloMemberId: '68e52ceb9f25b011fd9d578d',
-    trelloUsername: 'rayannouhaud',
-    trelloFullName: 'Rayan Nouhaud',
-    discordUserId: '442583182735572992',
+    trelloFullName: 'Yanis Gris',
+    trelloEmail: 'yannis.gris@gmail.com',
+    discordUserId: '394803260764192770',
   },
 ];
 

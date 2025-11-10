@@ -3,7 +3,7 @@ const util = require('util');
 const config = require('../config');
 const { resolveDiscordUser } = require('../config/userMap');
 const { sendActionMessage } = require('../discord/notifier');
-const { formatAction } = require('./formatter');
+const { formatAction, shouldNotifyAction } = require('./formatter');
 const { isValidSignature } = require('./signature');
 
 const router = express.Router();
@@ -30,6 +30,11 @@ router.post('/', async (req, res) => {
   if (!action) {
     console.log('[Trello] Ping recu', util.inspect(req.body, { depth: 2, colors: false }));
     return res.status(200).send('OK');
+  }
+
+  if (!shouldNotifyAction(action)) {
+    console.log('[Trello] Action ignoree (non notifiable)', action.type);
+    return res.status(204).end();
   }
 
   try {

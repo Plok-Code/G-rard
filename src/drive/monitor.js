@@ -3,6 +3,7 @@ const { sendActionMessage } = require('../discord/notifier');
 const { createDriveClient } = require('./client');
 const { loadState, saveState } = require('./stateStore');
 const { formatChange } = require('./formatter');
+const { shouldNotifyDriveChange } = require('./filter');
 
 let driveClient = null;
 let state = null;
@@ -241,6 +242,10 @@ async function processChanges() {
 
         processedChangeIds.add(change.id);
         newlyProcessedIds.push(change.id);
+
+        if (!shouldNotifyDriveChange(change)) {
+          continue;
+        }
 
         const roleId = config.discord.drivePingRoleId || config.discord.pingRoleId;
         const roleMention = roleId ? `<@&${roleId}>` : '';

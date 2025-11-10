@@ -19,11 +19,15 @@ npm install
 2. Completer les correspondances Trello -> Discord dans src/config/userMap.js si vous voulez mentionner les membres directement.
 3. Completer les correspondances Google -> Discord dans src/config/driveUserMap.js pour mapper emails/noms vers les IDs Discord.
 
+## Liens utiles
+- Trello equipe : https://trello.com/b/hEfZElfe/projet-2-wcd-equipe
+- Dossier Drive surveille : https://drive.google.com/drive/folders/1d2nmZTXX5VQGaxkIVYNQIlWAVPrKM6_n?usp=drive_link
+
 ### Variables Discord
 - DISCORD_BOT_TOKEN : token du bot
-- DISCORD_TARGET_CHANNEL_ID : identifiant du salon texte pour Trello (1425147162936873132)
-- DISCORD_PING_ROLE_ID : identifiant du role a ping (1425148129510035530)
-- DISCORD_DRIVE_CHANNEL_ID : salon texte pour les notifications Google Drive (1425151598451097681)
+- DISCORD_TARGET_CHANNEL_ID : identifiant du salon texte pour Trello (1435620410665472050)
+- DISCORD_PING_ROLE_ID : identifiant du role a ping (1435618024966062083)
+- DISCORD_DRIVE_CHANNEL_ID : salon texte pour les notifications Google Drive (1435620509256646787)
 - DISCORD_DRIVE_PING_ROLE_ID : optionnel, role specifique pour Drive (sinon le role Trello est reutilise)
 
 ### Trello
@@ -66,8 +70,8 @@ Pour un test local avec Trello, ouvrez un tunnel HTTP (ex:
 grok http 3000) et utilisez l'URL externe comme TRELLO_WEBHOOK_CALLBACK_URL.
 
 ## Fonctionnement
-- Trello : chaque action recu via le webhook est verifiee via x-trello-webhook, mappee a un utilisateur Discord (si present dans userMap.js), puis publiee dans le salon Trello avec ping du role.
-- Google Drive : le compte de service lit les changements (changes.list) et publie les ajouts, modifications, suppressions detectees dans le salon Drive, en pingant le role configure.
+- Trello : chaque action recu via le webhook est verifiee puis publiee uniquement si elle correspond a l'une des actions critiques (deplacement de carte entre listes, commentaire, piece jointe, assignation d'un membre, archivage). Les autres evenements sont ignores pour limiter le bruit.
+- Google Drive : le compte de service lit les changements et ne publie qu'en cas de creation de fichier/dossier ou de suppression (mise a la corbeille ou suppression definitive). Les modifications de contenu restent ignorees car l'integration ne telecharge pas les fichiers pour rechercher des chaines specifique comme "Notif Discord".
 - Les fichiers de suivi (ex: drive-state.json) permettent de reprendre la surveillance sans perdre de changements.
 
 ## Aller plus loin
