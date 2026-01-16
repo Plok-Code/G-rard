@@ -1,26 +1,32 @@
+const { userDirectory } = require('./userDirectory');
+
 // Map GitHub actors (emails / usernames) to Discord mentions so GitHub events can tag the team.
-const githubUserMappings = [
-  {
-    emails: ['idris.naulleau.aurial@gmail.com'],
-    displayName: 'Idris Naulleau-Aurial',
-    discordUserId: '929471016776904724',
-  },
-  {
-    emails: ['amelie.ny.tran@gmail.com'],
-    displayName: 'Amelie Ny Tran',
-    discordUserId: '405044561052696577',
-  },
-  {
-    emails: ['ericmongreville1@gmail.com'],
-    displayName: 'Eric Mongreville',
-    discordUserId: '1418256477147369595',
-  },
-  {
-    emails: ['yannis.gris@gmail.com', 'yannis.gaia@gmail.com'],
-    displayName: 'Yanis Gris',
-    discordUserId: '394803260764192770',
-  },
-];
+// Populate src/config/userDirectory.js instead of editing this file directly.
+const githubUserMappings = userDirectory
+  .map((entry) => {
+    const github = entry?.github;
+    if (!github) {
+      return null;
+    }
+
+    return {
+      emails: github.emails,
+      usernames: github.usernames,
+      names: github.names,
+      displayName: github.displayName || entry.discordDisplayName,
+      discordUserId: entry.discordUserId,
+    };
+  })
+  .filter((entry) => {
+    if (!entry) {
+      return false;
+    }
+
+    const hasEmails = Array.isArray(entry.emails) && entry.emails.length > 0;
+    const hasUsernames = Array.isArray(entry.usernames) && entry.usernames.length > 0;
+    const hasNames = Array.isArray(entry.names) && entry.names.length > 0;
+    return hasEmails || hasUsernames || hasNames;
+  });
 
 function normalise(value) {
   return (value || '').trim().toLowerCase();

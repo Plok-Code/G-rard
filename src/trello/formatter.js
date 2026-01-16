@@ -135,7 +135,8 @@ function buildFields(action) {
 
 function formatAction(action, actorDisplay, roleMention) {
   const summary = buildActionSummary(action);
-  const content = `${roleMention} ${actorDisplay} ${summary}`.trim();
+  const contentParts = [actorDisplay, summary, roleMention].filter(Boolean);
+  const content = contentParts.join(' ').trim();
 
   const embed = {
     color: 0x0055ff,
