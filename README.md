@@ -1,5 +1,7 @@
 # G-Rard - Trello / Drive / GitHub vers Discord
 
+Language: Francais (ce fichier) | [English](README.en.md)
+
 Bot Node.js qui envoie des notifications Trello, Google Drive et GitHub dans des salons Discord.
 
 Objectif principal:
