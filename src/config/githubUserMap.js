@@ -1,25 +1,14 @@
-// Map GitHub actors (emails / usernames) to Discord mentions so GitHub events can tag the team.
+// Map GitHub actors (emails / usernames / names) to Discord mentions.
+// Add entries matching your own ecosystem. Keep empty to disable direct user mentions.
 const githubUserMappings = [
-  {
-    emails: ['idris.naulleau.aurial@gmail.com'],
-    displayName: 'Idris Naulleau-Aurial',
-    discordUserId: '929471016776904724',
-  },
-  {
-    emails: ['amelie.ny.tran@gmail.com'],
-    displayName: 'Amelie Ny Tran',
-    discordUserId: '405044561052696577',
-  },
-  {
-    emails: ['ericmongreville1@gmail.com'],
-    displayName: 'Eric Mongreville',
-    discordUserId: '1418256477147369595',
-  },
-  {
-    emails: ['yannis.gris@gmail.com', 'yannis.gaia@gmail.com'],
-    displayName: 'Yanis Gris',
-    discordUserId: '394803260764192770',
-  },
+  // Example:
+  // {
+  //   usernames: ['github-login'],
+  //   emails: ['user@example.com'],
+  //   names: ['Full Name'],
+  //   displayName: 'Display Name',
+  //   discordUserId: '123456789012345678',
+  // },
 ];
 
 function normalise(value) {

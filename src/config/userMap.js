@@ -1,28 +1,15 @@
 // Map Trello members to Discord user IDs so the bot can mention them.
-// Fill this array with the Trello member identifiers you want to match.
+// Add entries matching your own ecosystem. Keep empty to disable direct user mentions.
 const userMappings = [
-  {
-    trelloMemberId: '671bcf458f2e724ae3ff9f27',
-    trelloFullName: 'Nova Realm',
-    trelloEmail: 'idris.naulleau.aurial@gmail.com',
-    preferredDisplayName: 'Idris Naulleau-Aurial',
-    discordUserId: '929471016776904724',
-  },
-  {
-    trelloFullName: 'Amelie Tran',
-    trelloEmail: 'amelie.ny.tran@gmail.com',
-    discordUserId: '405044561052696577',
-  },
-  {
-    trelloFullName: 'Eric Mongreville',
-    trelloEmail: 'ericmongreville1@gmail.com',
-    discordUserId: '1418256477147369595',
-  },
-  {
-    trelloFullName: 'Yanis Gris',
-    trelloEmail: 'yannis.gris@gmail.com',
-    discordUserId: '394803260764192770',
-  },
+  // Example:
+  // {
+  //   trelloMemberId: 'trello_member_id',
+  //   trelloUsername: 'trello_username',
+  //   trelloFullName: 'Full Name',
+  //   trelloEmail: 'user@example.com',
+  //   preferredDisplayName: 'Display Name',
+  //   discordUserId: '123456789012345678',
+  // },
 ];
 
 function normalise(value) {

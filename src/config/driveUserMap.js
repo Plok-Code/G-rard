@@ -1,26 +1,12 @@
 // Map Google accounts (email/displayName) to Discord user IDs for Drive notifications.
-// Renseignez les emails exacts (ou noms d'affichage) correspondant a vos membres.
+// Add entries matching your own ecosystem. Keep empty to disable direct user mentions.
 const driveUserMappings = [
-  {
-    email: 'idris.naulleau.aurial@gmail.com',
-    displayName: 'Idris Naulleau',
-    discordUserId: '929471016776904724',
-  },
-  {
-    email: 'amelie.ny.tran@gmail.com',
-    displayName: 'Amelie Tran',
-    discordUserId: '405044561052696577',
-  },
-  {
-    email: 'ericmongreville1@gmail.com',
-    displayName: 'Eric Mongreville',
-    discordUserId: '1418256477147369595',
-  },
-  {
-    email: 'yannis.gris@gmail.com',
-    displayName: 'Yanis Gris',
-    discordUserId: '394803260764192770',
-  },
+  // Example:
+  // {
+  //   email: 'user@example.com',
+  //   displayName: 'Full Name',
+  //   discordUserId: '123456789012345678',
+  // },
 ];
 
 function normalise(value) {
