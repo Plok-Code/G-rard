@@ -12,6 +12,7 @@ const driveUserMappings = userDirectory
     return {
       email: drive.email,
       displayName: drive.displayName,
+      discordDisplayName: entry.discordDisplayName,
       discordUserId: entry.discordUserId,
     };
   })
@@ -27,8 +28,13 @@ function normalise(value) {
 }
 
 function resolveDriveDiscordUser(actor) {
+  const profile = resolveDriveDiscordProfile(actor);
+  return profile.discordUserId;
+}
+
+function resolveDriveDiscordProfile(actor) {
   if (!actor) {
-    return null;
+    return { discordUserId: null, displayName: null };
   }
 
   const email = actor.emailAddress;
@@ -44,10 +50,18 @@ function resolveDriveDiscordUser(actor) {
     return false;
   });
 
-  return match ? match.discordUserId : null;
+  if (!match) {
+    return { discordUserId: null, displayName: null };
+  }
+
+  return {
+    discordUserId: match.discordUserId || null,
+    displayName: match.discordDisplayName || null,
+  };
 }
 
 module.exports = {
   driveUserMappings,
+  resolveDriveDiscordProfile,
   resolveDriveDiscordUser,
 };

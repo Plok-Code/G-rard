@@ -39,8 +39,11 @@ router.post('/', async (req, res) => {
 
   try {
     const roleId = config.discord.githubPingRoleId || config.discord.pingRoleId;
-    const roleMention = roleId ? `<@&${roleId}>` : '';
-    const message = formatGithubEvent(eventName, req.body, roleMention);
+    const roleMention =
+      config.discord.githubPingRoleEnabled && roleId ? `||<@&${roleId}>||` : '';
+    const message = formatGithubEvent(eventName, req.body, roleMention, {
+      mentionActor: config.discord.githubActorPingEnabled,
+    });
 
     if (!message) {
       console.log('[GitHub] Event ignore', eventName, deliveryId);

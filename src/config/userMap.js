@@ -14,7 +14,7 @@ const userMappings = userDirectory
       trelloUsername: trello.username,
       trelloFullName: trello.fullName,
       trelloEmail: trello.email,
-      preferredDisplayName: trello.preferredDisplayName || entry.discordDisplayName,
+      preferredDisplayName: trello.preferredDisplayName,
       discordDisplayName: entry.discordDisplayName,
       discordUserId: entry.discordUserId,
     };
@@ -70,8 +70,8 @@ function resolveDiscordProfile(member) {
   }
 
   const displayName =
-    match.preferredDisplayName ||
     match.discordDisplayName ||
+    match.preferredDisplayName ||
     match.trelloFullName ||
     match.trelloUsername ||
     null;

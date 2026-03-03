@@ -13,7 +13,7 @@ const githubUserMappings = userDirectory
       emails: github.emails,
       usernames: github.usernames,
       names: github.names,
-      displayName: github.displayName || entry.discordDisplayName,
+      displayName: entry.discordDisplayName || github.displayName,
       discordUserId: entry.discordUserId,
     };
   })

@@ -232,9 +232,12 @@ async function processChanges() {
         }
 
         const roleId = config.discord.drivePingRoleId || config.discord.pingRoleId;
-        const roleMention = roleId ? `<@&${roleId}>` : '';
+        const roleMention =
+          config.discord.drivePingRoleEnabled && roleId ? `||<@&${roleId}>||` : '';
         try {
-          const message = formatChange(change, roleMention);
+          const message = formatChange(change, roleMention, {
+            mentionActor: config.discord.driveActorPingEnabled,
+          });
           await sendActionMessage(message, { channelId: config.discord.driveChannelId });
         } catch (error) {
           console.error('[Drive] Erreur lors de lenvoi du message Discord', error);

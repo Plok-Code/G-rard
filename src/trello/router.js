@@ -40,10 +40,15 @@ router.post('/', async (req, res) => {
   try {
     const actor = action.memberCreator || {};
     const { discordUserId, displayName } = resolveDiscordProfile(actor);
-    const actorDisplay = discordUserId
-      ? `<@${discordUserId}>`
-      : `**${displayName || actor.fullName || actor.username || 'Quelqu\'un'}**`;
-    const roleMention = `<@&${config.discord.pingRoleId}>`;
+    const actorName = displayName || actor.fullName || actor.username || 'Quelqu\'un';
+    const actorDisplay =
+      config.discord.trelloActorPingEnabled && discordUserId
+        ? `<@${discordUserId}>`
+        : `**${actorName}**`;
+    const roleMention =
+      config.discord.trelloPingRoleEnabled && config.discord.pingRoleId
+        ? `||<@&${config.discord.pingRoleId}>||`
+        : '';
 
     console.log('[Trello] Action recu', action.type, 'par', actor.fullName || actor.username || actor.id);
 

@@ -1,4 +1,4 @@
-const { resolveDriveDiscordUser } = require('../config/driveUserMap');
+const { resolveDriveDiscordProfile } = require('../config/driveUserMap');
 
 function humanMimeType(mimeType = '') {
   if (mimeType === 'application/vnd.google-apps.folder') {
@@ -33,14 +33,16 @@ function buildFileLink(file) {
   return `"${name}"`;
 }
 
-function buildActor(file) {
+function buildActor(file, options = {}) {
+  const { mentionActor = true } = options;
   const actor = file?.lastModifyingUser || file?.owners?.[0];
-  const displayName = actor?.displayName || actor?.emailAddress || 'Quelqu\'un';
-  const email = actor?.emailAddress;
-  const discordUserId = resolveDriveDiscordUser(actor);
+  const mapping = resolveDriveDiscordProfile(actor);
+  const fallbackLabel = actor?.displayName || actor?.emailAddress || 'Quelqu\'un';
+  const displayName = mapping.displayName || fallbackLabel;
+  const discordUserId = mapping.discordUserId;
 
-  const mention = discordUserId ? `<@${discordUserId}>` : `**${displayName}**`;
-  const embedLabel = email ? `${displayName} (${email})` : displayName;
+  const mention = mentionActor && discordUserId ? `<@${discordUserId}>` : `**${displayName}**`;
+  const embedLabel = displayName;
 
   return {
     mention,
@@ -88,13 +90,13 @@ function describeChange(change, actorLabel, fileLink) {
   };
 }
 
-function formatChange(change, roleMention) {
+function formatChange(change, roleMention, options = {}) {
   const file = change.file;
-  const actor = buildActor(file);
+  const actor = buildActor(file, options);
   const fileLink = buildFileLink(file);
   const summary = describeChange(change, actor.embedLabel, fileLink);
 
-  const contentParts = [roleMention, actor.mention, summary.contentSummary].filter(Boolean);
+  const contentParts = [actor.mention, summary.contentSummary, roleMention].filter(Boolean);
   const content = contentParts.join(' ').trim();
 
   const embed = {

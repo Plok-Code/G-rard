@@ -16,6 +16,22 @@ function optionalEnv(name, fallback) {
   return value !== undefined ? value : fallback;
 }
 
+function optionalBooleanEnv(name, fallback) {
+  const raw = process.env[name];
+  if (raw === undefined || raw === null || raw === '') {
+    return fallback;
+  }
+
+  const normalised = String(raw).trim().toLowerCase();
+  if (['1', 'true', 'yes', 'on'].includes(normalised)) {
+    return true;
+  }
+  if (['0', 'false', 'no', 'off'].includes(normalised)) {
+    return false;
+  }
+  return fallback;
+}
+
 function formatPrivateKey(key) {
   return key.replace(/\\n/g, '\n');
 }
@@ -32,9 +48,15 @@ const config = {
   discord: {
     token: requireEnv('DISCORD_BOT_TOKEN'),
     targetChannelId: requireEnv('DISCORD_TARGET_CHANNEL_ID'),
-    pingRoleId: requireEnv('DISCORD_PING_ROLE_ID'),
+    pingRoleId: optionalEnv('DISCORD_PING_ROLE_ID', null),
     driveChannelId: optionalEnv('DISCORD_DRIVE_CHANNEL_ID', null),
     drivePingRoleId: optionalEnv('DISCORD_DRIVE_PING_ROLE_ID', null),
+    trelloPingRoleEnabled: optionalBooleanEnv('DISCORD_TRELLO_PING_ROLE_ENABLED', true),
+    drivePingRoleEnabled: optionalBooleanEnv('DISCORD_DRIVE_PING_ROLE_ENABLED', true),
+    githubPingRoleEnabled: optionalBooleanEnv('DISCORD_GITHUB_PING_ROLE_ENABLED', true),
+    trelloActorPingEnabled: optionalBooleanEnv('DISCORD_TRELLO_PING_ACTOR_ENABLED', true),
+    driveActorPingEnabled: optionalBooleanEnv('DISCORD_DRIVE_PING_ACTOR_ENABLED', true),
+    githubActorPingEnabled: optionalBooleanEnv('DISCORD_GITHUB_PING_ACTOR_ENABLED', true),
     statusText: process.env.DISCORD_STATUS_TEXT || 'Listening for Trello & Drive updates',
   },
   trello: {
